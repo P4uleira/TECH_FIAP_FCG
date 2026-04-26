@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="FCG.Api/FCG.Api.csproj" />
+  <Project Path="FCG.Domain/FCG.Domain.csproj" />
+  <Project Path="FCG.Infra/FCG.Infra.csproj" />
+</Solution>
