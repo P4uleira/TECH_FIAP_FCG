@@ -1,6 +1,6 @@
 using FCG.Infra.Data;
 using Microsoft.EntityFrameworkCore;
-
+using FCG.Api.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +31,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<TratamentoErroMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();
