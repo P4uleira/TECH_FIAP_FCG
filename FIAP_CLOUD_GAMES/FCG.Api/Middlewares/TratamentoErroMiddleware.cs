@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using FCG.Domain.Exceptions;
+using System.Net;
 using System.Text.Json;
 
 namespace FCG.Api.Middlewares;
@@ -35,6 +36,7 @@ public class TratamentoErroMiddleware
     {
         var statusCode = ex switch
         {
+            DomainException => HttpStatusCode.BadRequest,
             ArgumentException => HttpStatusCode.BadRequest,
             KeyNotFoundException => HttpStatusCode.NotFound,
             UnauthorizedAccessException => HttpStatusCode.Unauthorized,

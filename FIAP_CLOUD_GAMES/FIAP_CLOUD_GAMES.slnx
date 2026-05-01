@@ -1,5 +1,6 @@
 <Solution>
   <Project Path="FCG.Api/FCG.Api.csproj" />
+  <Project Path="FCG.Application/FCG.Application.csproj" Id="4483279b-c298-4e85-a8c4-f134287bd61c" />
   <Project Path="FCG.Domain/FCG.Domain.csproj" />
   <Project Path="FCG.Infra/FCG.Infra.csproj" />
 </Solution>

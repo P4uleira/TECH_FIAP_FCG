@@ -1,110 +1,61 @@
-﻿using AutoMapper;
-using FCG.Domain.DTO.Requests.Usuario;
-using FCG.Domain.DTO.Requests.UsuarioRequests;
-using FCG.Domain.DTO.Responses.UsuarioResponses;
-using FCG.Domain.Entity;
+﻿using FCG.Domain.Entity;
+using FCG.Domain.Exceptions;
 using FCG.Domain.Interfaces.Repositories;
 using FCG.Domain.Interfaces.Services;
-using Microsoft.Extensions.Logging;
+using System.Text.RegularExpressions;
 
 namespace FCG.Domain.Services;
 
 public class UsuarioService : IUsuarioService
 {
-    private readonly IUsuarioRepository _usuarioRepository;
-    private readonly ILogger<UsuarioService> _logger;
-    private readonly IMapper _mapper;
-
-    public UsuarioService(IUsuarioRepository usuarioRepository, ILogger<UsuarioService> logger, IMapper mapper)
+    public async Task ValidaEmail(Usuario usuario)
     {
-        _usuarioRepository = usuarioRepository;
-        _logger = logger;
-        _mapper = mapper;
+        ValidarCampos(usuario);
+
+        var emailValido = Regex.IsMatch(
+            usuario.Email,
+            @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
+            RegexOptions.IgnoreCase
+        );
+
+        if (!emailValido)
+            throw new DomainException("O e-mail informado é inválido.");
+
     }
 
-    public async Task Atualizar(AtualizarUsuarioRequest request)
+    public async Task ValidaSenhaForte(Usuario usuario)
     {
-        try
-        {
-            _logger.LogInformation("Atualizando usuário {Id}.", request.Id);
-            var usuario = _mapper.Map<Usuario>(request);
-            await _usuarioRepository.Atualizar(usuario);
-            _logger.LogInformation("Usuário {Id} atualizado com sucesso.", request.Id);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Erro ao atualizar usuário {Id}.", request.Id);
-            throw;
-        }
+        ValidarCampos(usuario);
+
+        var caracteresEspeciais = @"!@#$%^&*()_+-=[]{}|;':"",./<>?";
+        if (!usuario.Senha.Any(c => caracteresEspeciais.Contains(c)))
+            throw new DomainException("A senha deve conter pelo menos um caractere especial.");
     }
 
-    public async Task<UsuarioResponse?> BuscarPorId(Guid guid)
+    private static void ValidarCampos(Usuario usuario)
     {
-        try
-        {
-            _logger.LogInformation("Buscando usuário {Id}.", guid);
-            var usuario = await _usuarioRepository.BuscarPorId(guid);
+        if (string.IsNullOrWhiteSpace(usuario.Nome))
+            throw new DomainException("O nome do usuário é obrigatório.");
 
-            if (usuario is null)
-            {
-                _logger.LogWarning("Usuário {Id} não encontrado.", guid);
-                return null;
-            }
+        if (usuario.Nome.Length > 100)
+            throw new DomainException("O nome do usuário não pode ultrapassar 100 caracteres.");
 
-            _logger.LogInformation("Usuário {Id} encontrado com sucesso.", guid);
-            return _mapper.Map<UsuarioResponse>(usuario);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Erro ao buscar usuário {Id}.", guid);
-            throw;
-        }
-    }
+        if (string.IsNullOrWhiteSpace(usuario.Email))
+            throw new DomainException("O e-mail do usuário é obrigatório.");
 
-    public async Task<IEnumerable<UsuarioResponse>> BuscarTodos()
-    {
-        try
-        {
-            _logger.LogInformation("Buscando todos os usuários.");
-            var usuarios = await _usuarioRepository.BuscarTodos();
-            _logger.LogInformation("{Total} usuário(s) encontrado(s).", usuarios.Count());
-            return _mapper.Map<IEnumerable<UsuarioResponse>>(usuarios);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Erro ao buscar todos os usuários.");
-            throw;
-        }
-    }
+        if (usuario.Email.Length > 100)
+            throw new DomainException("O e-mail do usuário não pode ultrapassar 100 caracteres.");
 
-    public async Task Criar(CriarUsuarioRequest request)
-    {
-        try
-        {
-            _logger.LogInformation("Criando usuário {Email}.", request.Email);
-            var usuario = _mapper.Map<Usuario>(request);
-            await _usuarioRepository.Criar(usuario);
-            _logger.LogInformation("Usuário {Email} criado com sucesso.", request.Email);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Erro ao criar usuário {Email}.", request.Email);
-            throw;
-        }
-    }
+        if (string.IsNullOrWhiteSpace(usuario.Senha))
+            throw new DomainException("A senha do usuário é obrigatória.");
 
-    public async Task Deletar(Guid guid)
-    {
-        try
-        {
-            _logger.LogInformation("Deletando usuário {Id}.", guid);
-            await _usuarioRepository.Deletar(guid);
-            _logger.LogInformation("Usuário {Id} deletado com sucesso.", guid);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Erro ao deletar usuário {Id}.", guid);
-            throw;
-        }
+        if (usuario.Senha.Length < 8)
+            throw new DomainException("A senha deve ter no mínimo 8 caracteres.");
+
+        if (!usuario.Senha.Any(char.IsLetter))
+            throw new DomainException("A senha deve conter pelo menos uma letra.");
+
+        if (!usuario.Senha.Any(char.IsDigit))
+            throw new DomainException("A senha deve conter pelo menos um número.");
     }
 }

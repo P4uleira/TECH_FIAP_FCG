@@ -48,4 +48,16 @@ public class JogoRepository : IJogoRepository
         _dbContext.Jogos.Remove(jogo);
         await _dbContext.SaveChangesAsync();
     }
+
+    public async Task<bool> ExisteTitulo(string titulo)
+    {
+        return await _dbContext.Jogos
+            .AnyAsync(j => j.Titulo.ToLower() == titulo.ToLower());
+    }
+
+    public async Task<bool> ExisteTituloEmOutroJogo(Guid id, string titulo)
+    {
+        return await _dbContext.Jogos
+            .AnyAsync(j => j.Titulo.ToLower() == titulo.ToLower() && j.Id != id);
+    }
 }
