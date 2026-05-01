@@ -31,8 +31,7 @@ public class UsuarioConfiguration : IEntityTypeConfiguration<Usuario>
             .WithMany(r => r.Usuarios)
             .HasForeignKey(u => u.AcessoId);
 
-
-        builder.HasMany(u => u.UsuarioJogos)
+        builder.HasMany(u => u.Biblioteca)
             .WithOne(uj => uj.Usuario)
             .HasForeignKey(uj => uj.UsuarioId);
     }

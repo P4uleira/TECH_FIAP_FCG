@@ -1,12 +1,14 @@
 ﻿using FCG.Application.Interfaces;
 using FCG.Domain.DTO.Requests.Usuario;
 using FCG.Domain.DTO.Requests.UsuarioRequests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FCG.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize(Roles = "Administrador")]
 public class UsuarioController : ControllerBase
 {
     private readonly IUsuarioHandler _handler;
@@ -15,7 +17,7 @@ public class UsuarioController : ControllerBase
     {
         _handler = handler;
     }
-
+    
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> BuscarPorId(Guid id)
     {
@@ -26,7 +28,7 @@ public class UsuarioController : ControllerBase
 
         return Ok(response);
     }
-
+    
     [HttpGet]
     public async Task<IActionResult> BuscarTodos()
     {
@@ -35,6 +37,7 @@ public class UsuarioController : ControllerBase
     }
 
     [HttpPost]
+    [AllowAnonymous]
     public async Task<IActionResult> Criar([FromBody] CriarUsuarioRequest request)
     {
         await _handler.Criar(request);

@@ -1,12 +1,14 @@
 ﻿using FCG.Application.Interfaces;
 using FCG.Domain.DTO.Requests.Jogo;
 using FCG.Domain.DTO.Requests.JogoRequests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FCG.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize(Roles = "Administrador")]
 public class JogoController : ControllerBase
 {
     private readonly IJogoHandler _handler;

@@ -23,9 +23,8 @@ public class JogoConfiguration : IEntityTypeConfiguration<Jogo>
         builder.Property(j => j.Preco)
             .HasPrecision(10, 2);
 
-        builder.HasMany(j => j.UsuarioJogos)
+        builder.HasMany(j => j.Biblioteca)
             .WithOne(uj => uj.Jogo)
             .HasForeignKey(uj => uj.JogoId);
-
     }
 }

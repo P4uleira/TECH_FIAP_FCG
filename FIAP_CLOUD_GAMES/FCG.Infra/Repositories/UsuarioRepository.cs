@@ -49,5 +49,18 @@ public class UsuarioRepository : IUsuarioRepository
         _dbContext.Usuarios.Remove(usuario);
         await _dbContext.SaveChangesAsync();
     }
-    
+
+    public async Task<bool> ExisteEmail(string email)
+    {
+        return await _dbContext.Usuarios
+            .AnyAsync(u => u.Email.ToLower() == email.ToLower());
+    }
+
+    public async Task<Usuario?> BuscarPorEmail(string email)
+    {
+        return await _dbContext.Usuarios
+            .Include(u => u.Acesso)
+            .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
+    }
+
 }

@@ -9,6 +9,6 @@ public class Usuario
     public Guid AcessoId { get; set; }
     public Acesso Acesso { get; set; } = null!;
 
-    public ICollection<UsuarioJogo> UsuarioJogos { get; set; } = new List<UsuarioJogo>();
+    public ICollection<Biblioteca> Biblioteca { get; set; } = new List<Biblioteca>();
 
 }

@@ -76,6 +76,9 @@ public class UsuarioHandler : IUsuarioHandler
 
         await _usuarioService.ValidaEmail(usuario);
         await _usuarioService.ValidaSenhaForte(usuario);
+
+        usuario.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
+
         await _usuarioRepository.Criar(usuario);
 
         _logger.LogInformation("Usuário {Nome} criado com sucesso.", request.Nome);
