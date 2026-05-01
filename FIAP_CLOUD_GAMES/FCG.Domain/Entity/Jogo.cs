@@ -7,5 +7,5 @@ public class Jogo
     public string Descricao { get; set; } = string.Empty;
     public decimal Preco { get; set; } 
     public DateTime DataCriacao { get; set; } = DateTime.UtcNow;
-    public ICollection<UsuarioJogo> UsuarioJogos { get; set; } = new List<UsuarioJogo>();
+    public ICollection<Biblioteca> Biblioteca { get; set; } = new List<Biblioteca>();
 }

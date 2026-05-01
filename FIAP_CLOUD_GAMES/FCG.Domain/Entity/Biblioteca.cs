@@ -1,6 +1,6 @@
 ﻿namespace FCG.Domain.Entity;
 
-public class UsuarioJogo
+public class Biblioteca
 {
     public Guid UsuarioId { get; set; }
     public Usuario Usuario { get; set; } = null!;

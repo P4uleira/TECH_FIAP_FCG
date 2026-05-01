@@ -26,6 +26,6 @@ public class FCGDbContext : DbContext
     public DbSet<Usuario> Usuarios => Set<Usuario>();
     public DbSet<Jogo> Jogos => Set<Jogo>();
     public DbSet<Acesso> Acessos => Set<Acesso>();
-    public DbSet<UsuarioJogo> UsuarioJogos => Set<UsuarioJogo>();
+    public DbSet<Biblioteca> UsuarioJogos => Set<Biblioteca>();
 
 }
