@@ -6,5 +6,8 @@ public class JogoResponse
     public string Titulo { get; set; } = string.Empty;
     public string Descricao { get; set; } = string.Empty;
     public decimal Preco { get; set; }
+    public decimal PrecoAtual { get; set; }
+    public bool EmPromocao { get; set; }
+    public DateTime? PromocaoExpiracao { get; set; }
     public DateTime DataCriacao { get; set; }
 }

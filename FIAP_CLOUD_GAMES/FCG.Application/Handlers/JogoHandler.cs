@@ -4,6 +4,7 @@ using FCG.Domain.DTO.Requests.Jogo;
 using FCG.Domain.DTO.Requests.JogoRequests;
 using FCG.Domain.DTO.Responses.JogoResponses;
 using FCG.Domain.Entity;
+using FCG.Domain.Exceptions;
 using FCG.Domain.Interfaces.Repositories;
 using FCG.Domain.Interfaces.Services;
 using Microsoft.Extensions.Logging;
@@ -34,7 +35,14 @@ public class JogoHandler : IJogoHandler
         if (jogoExistente is null)
             throw new KeyNotFoundException($"Jogo com ID {request.Id} não encontrado.");
 
-        _mapper.Map(request, jogoExistente);
+        if (!string.IsNullOrWhiteSpace(request.Titulo))
+            jogoExistente.Titulo = request.Titulo;
+
+        if (!string.IsNullOrWhiteSpace(request.Descricao))
+            jogoExistente.Descricao = request.Descricao;
+
+        if (request.Preco.HasValue)
+            jogoExistente.Preco = request.Preco.Value;
 
         await _jogoService.ValidarAtualizacao(jogoExistente);
         await _jogoRepository.Atualizar(jogoExistente);
@@ -86,5 +94,43 @@ public class JogoHandler : IJogoHandler
 
         await _jogoRepository.Deletar(id);
         _logger.LogInformation("Jogo {Id} deletado com sucesso.", id);
+    }
+
+    public async Task AplicarPromocao(Guid id, PromocaoRequest request)
+    {
+        _logger.LogInformation("Aplicando promoção ao jogo {Id}.", id);
+
+        var jogo = await _jogoRepository.BuscarPorId(id);
+        if (jogo is null)
+            throw new KeyNotFoundException($"Jogo com ID {id} não encontrado.");
+
+        // Valida regras de promoção no Domain
+        _jogoService.ValidarPromocao(jogo, request.PrecoPromocional, request.Expiracao);
+
+        jogo.PrecoPromocional = request.PrecoPromocional;
+        jogo.PromocaoExpiracao = request.Expiracao;
+
+        await _jogoRepository.Atualizar(jogo);
+
+        _logger.LogInformation("Promoção aplicada ao jogo {Id}. Preço: {Preco}.", id, request.PrecoPromocional);
+    }
+
+    public async Task RemoverPromocao(Guid id)
+    {
+        _logger.LogInformation("Removendo promoção do jogo {Id}.", id);
+
+        var jogo = await _jogoRepository.BuscarPorId(id);
+        if (jogo is null)
+            throw new KeyNotFoundException($"Jogo com ID {id} não encontrado.");
+
+        if (!jogo.EmPromocao)
+            throw new DomainException("Este jogo não está em promoção.");
+
+        jogo.PrecoPromocional = null;
+        jogo.PromocaoExpiracao = null;
+
+        await _jogoRepository.Atualizar(jogo);
+
+        _logger.LogInformation("Promoção removida do jogo {Id}.", id);
     }
 }

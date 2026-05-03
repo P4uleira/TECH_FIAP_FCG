@@ -19,6 +19,7 @@ public class JogoController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [AllowAnonymous]
     public async Task<IActionResult> BuscarPorId(Guid id)
     {
         var response = await _handler.BuscarPorId(id);
@@ -30,6 +31,7 @@ public class JogoController : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<IActionResult> BuscarTodos()
     {
         var response = await _handler.BuscarTodos();
@@ -54,6 +56,23 @@ public class JogoController : ControllerBase
     public async Task<IActionResult> Deletar(Guid id)
     {
         await _handler.Deletar(id);
+        return NoContent();
+    }
+
+    [HttpPut("{id:guid}/promocao")]
+    [Authorize(Roles = "Administrador")]
+    public async Task<IActionResult> AplicarPromocao(Guid id, [FromBody] PromocaoRequest request)
+    {
+        await _handler.AplicarPromocao(id, request);
+        return NoContent();
+    }
+
+
+    [HttpDelete("{id:guid}/promocao")]
+    [Authorize(Roles = "Administrador")]
+    public async Task<IActionResult> RemoverPromocao(Guid id)
+    {
+        await _handler.RemoverPromocao(id);
         return NoContent();
     }
 }

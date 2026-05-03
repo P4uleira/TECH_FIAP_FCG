@@ -11,4 +11,6 @@ public interface IJogoHandler
     Task Criar(CriarJogoRequest request);
     Task Atualizar(AtualizarJogoRequest request);
     Task Deletar(Guid id);
+    Task AplicarPromocao(Guid id, PromocaoRequest request);
+    Task RemoverPromocao(Guid id);
 }

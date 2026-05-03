@@ -6,6 +6,7 @@ using FCG.Domain.DTO.Responses.UsuarioResponses;
 using FCG.Domain.Entity;
 using FCG.Domain.Interfaces.Repositories;
 using FCG.Domain.Interfaces.Services;
+using FCG.Domain.Services;
 using Microsoft.Extensions.Logging;
 
 namespace FCG.Application.Handlers;
@@ -14,15 +15,18 @@ public class UsuarioHandler : IUsuarioHandler
 {
     private readonly IUsuarioRepository _usuarioRepository;
     private readonly IUsuarioService _usuarioService;
+    private readonly IAuthService _authService;
     private readonly ILogger<UsuarioHandler> _logger;
     private readonly IMapper _mapper;
 
-    public UsuarioHandler(IUsuarioRepository usuarioRepository, IUsuarioService usuarioService, ILogger<UsuarioHandler> logger, IMapper mapper)
+    public UsuarioHandler(IUsuarioRepository usuarioRepository, IUsuarioService usuarioService, IAuthService authService, ILogger<UsuarioHandler> logger, IMapper mapper)
     {
         _usuarioRepository = usuarioRepository;
         _usuarioService = usuarioService;
+        _authService = authService;
         _logger = logger;
         _mapper = mapper;
+        
     }
 
     public async Task Atualizar(AtualizarUsuarioRequest request)
@@ -30,13 +34,29 @@ public class UsuarioHandler : IUsuarioHandler
         _logger.LogInformation("Atualizando usuário {Id}.", request.Id);
 
         var usuarioExistente = await _usuarioRepository.BuscarPorId(request.Id);
+
         if (usuarioExistente is null)
             throw new KeyNotFoundException($"Usuário com ID {request.Id} não encontrado.");
 
-        _mapper.Map(request, usuarioExistente);
+        if (!string.IsNullOrWhiteSpace(request.Nome))
+            usuarioExistente.Nome = request.Nome;
 
-        await _usuarioService.ValidaEmail(usuarioExistente);
-        await _usuarioService.ValidaSenhaForte(usuarioExistente);
+        if (!string.IsNullOrWhiteSpace(request.Email))
+        {
+            usuarioExistente.Email = request.Email;
+            await _usuarioService.ValidaEmail(usuarioExistente);
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.Senha))
+        {
+            usuarioExistente.Senha = request.Senha;
+            await _usuarioService.ValidaSenhaForte(usuarioExistente);
+            usuarioExistente.Senha = _authService.HashSenha(request.Senha);
+        }
+
+        if (request.AcessoId.HasValue)
+            usuarioExistente.AcessoId = request.AcessoId.Value;
+
         await _usuarioRepository.Atualizar(usuarioExistente);
 
         _logger.LogInformation("Usuário {Id} atualizado com sucesso.", request.Id);
