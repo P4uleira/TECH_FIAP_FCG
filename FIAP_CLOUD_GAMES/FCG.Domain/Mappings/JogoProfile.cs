@@ -13,5 +13,9 @@ public class JogoProfile : Profile
         CreateMap<CriarJogoRequest, Jogo>();
         CreateMap<AtualizarJogoRequest, Jogo>();
         CreateMap<Jogo, JogoResponse>();
+        CreateMap<Jogo, JogoResponse>()
+            .ForMember(dest => dest.PrecoAtual, opt => opt.MapFrom(src => src.PrecoAtual))
+            .ForMember(dest => dest.EmPromocao, opt => opt.MapFrom(src => src.EmPromocao))
+            .ForMember(dest => dest.PromocaoExpiracao, opt => opt.MapFrom(src => src.PromocaoExpiracao));
     }
 }

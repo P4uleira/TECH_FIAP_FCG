@@ -31,6 +31,18 @@ public class JogoService : IJogoService
             throw new DomainException($"Já existe outro jogo cadastrado com o título '{jogo.Titulo}'.");
     }
 
+    public void ValidarPromocao(Jogo jogo, decimal precoPromocional, DateTime? expiracao)
+    {
+        if (precoPromocional <= 0)
+            throw new DomainException("O preço promocional deve ser maior que zero.");
+
+        if (precoPromocional >= jogo.Preco)
+            throw new DomainException("O preço promocional deve ser menor que o preço original.");
+
+        if (expiracao.HasValue && expiracao.Value <= DateTime.UtcNow)
+            throw new DomainException("A data de expiração da promoção deve ser futura.");
+    }
+
     private static void ValidarCampos(Jogo jogo)
     {
         if (string.IsNullOrWhiteSpace(jogo.Titulo))
