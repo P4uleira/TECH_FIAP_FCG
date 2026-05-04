@@ -276,26 +276,44 @@ A documentação Swagger estará em:
 
 A API utiliza autenticação via **JWT Bearer Token**.
 
-### 1. Faça login
+### 1. Criação de um usuário incial.
+
+```http
+POST /api/usuario/
+Content-Type: application/json
+
+Atualmente o sistema possui dois tipos de acesso (Usuário e ADM)
+
+Guid fixado para ambos:
+
+8D87CAAF-6345-4865-9057-45A8B6B5D882	Administrador
+0C6CD9E6-F3EA-44A0-9C4D-ECD7906089DE	Usuário
+
+Ao realizar o cadastro siga os próximos passos.
+
+```
+
+### 2. Faça login
 
 ```http
 POST /api/auth/login
 Content-Type: application/json
 
+Ex.:
 {
   "email": "admin@fcg.com",
   "senha": "Admin@123"
 }
 ```
 
-### 2. Use o token retornado
+### 3. Use o token retornado
 
 ```http
 GET /api/jogos
 Authorization: Bearer {seu_token_aqui}
 ```
 
-### 3. No Swagger
+### 4. No Swagger
 
 Clique no botão **Authorize** (🔒) no canto superior direito, cole o token no formato `Bearer {token}` e confirme.
 
@@ -374,13 +392,14 @@ O projeto foi modelado seguindo os princípios de **Domain-Driven Design**:
 
 A documentação de Event Storming com os fluxos de **Criação de Usuários** e **Criação de Jogos** está disponível no Miro:
 
-> 🔗 [Link da documentação DDD no Miro]([#](https://miro.com/app/board/uXjVHfdUwn8=/?share_link_id=437338695684))
+> 🔗 [Link da documentação DDD no Miro](https://miro.com/app/board/uXjVHfdUwn8=/?share_link_id=437338695684)
 
 ---
 
 ## 👥 Equipe
 
 | Nome | Username Discord |
+|---|---|
 | Paulo Ricardo P. de Oliveira | P4uleira#7489 |
 
 ---
