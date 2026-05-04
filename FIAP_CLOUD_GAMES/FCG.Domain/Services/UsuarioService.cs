@@ -8,54 +8,69 @@ namespace FCG.Domain.Services;
 
 public class UsuarioService : IUsuarioService
 {
+    private static readonly string CaracteresEspeciais = @"!@#$%^&*()_+-=[]{}|;':"",./<>?";
+
     public async Task ValidaEmail(Usuario usuario)
     {
-        ValidarCampos(usuario);
+        ValidarNome(usuario.Nome);
+        ValidarEmail(usuario.Email);
+    }
+
+    public async Task ValidaSenhaForte(Usuario usuario)
+    {
+        ValidarNome(usuario.Nome);
+        ValidarSenha(usuario.Senha);
+    }
+
+    public async Task ValidarCriacao(Usuario usuario)
+    {
+        ValidarNome(usuario.Nome);
+        ValidarEmail(usuario.Email);
+        ValidarSenha(usuario.Senha);
+    }
+
+    private static void ValidarNome(string nome)
+    {
+        if (string.IsNullOrWhiteSpace(nome))
+            throw new DomainException("O nome do usuário é obrigatório.");
+
+        if (nome.Length > 100)
+            throw new DomainException("O nome do usuário não pode ultrapassar 100 caracteres.");
+    }
+
+    private static void ValidarEmail(string email)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+            throw new DomainException("O e-mail do usuário é obrigatório.");
+
+        if (email.Length > 100)
+            throw new DomainException("O e-mail do usuário não pode ultrapassar 100 caracteres.");
 
         var emailValido = Regex.IsMatch(
-            usuario.Email,
+            email,
             @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
             RegexOptions.IgnoreCase
         );
 
         if (!emailValido)
             throw new DomainException("O e-mail informado é inválido.");
-
     }
 
-    public async Task ValidaSenhaForte(Usuario usuario)
+    private static void ValidarSenha(string senha)
     {
-        ValidarCampos(usuario);
-
-        var caracteresEspeciais = @"!@#$%^&*()_+-=[]{}|;':"",./<>?";
-        if (!usuario.Senha.Any(c => caracteresEspeciais.Contains(c)))
-            throw new DomainException("A senha deve conter pelo menos um caractere especial.");
-    }
-
-    private static void ValidarCampos(Usuario usuario)
-    {
-        if (string.IsNullOrWhiteSpace(usuario.Nome))
-            throw new DomainException("O nome do usuário é obrigatório.");
-
-        if (usuario.Nome.Length > 100)
-            throw new DomainException("O nome do usuário não pode ultrapassar 100 caracteres.");
-
-        if (string.IsNullOrWhiteSpace(usuario.Email))
-            throw new DomainException("O e-mail do usuário é obrigatório.");
-
-        if (usuario.Email.Length > 100)
-            throw new DomainException("O e-mail do usuário não pode ultrapassar 100 caracteres.");
-
-        if (string.IsNullOrWhiteSpace(usuario.Senha))
+        if (string.IsNullOrWhiteSpace(senha))
             throw new DomainException("A senha do usuário é obrigatória.");
 
-        if (usuario.Senha.Length < 8)
+        if (senha.Length < 8)
             throw new DomainException("A senha deve ter no mínimo 8 caracteres.");
 
-        if (!usuario.Senha.Any(char.IsLetter))
+        if (!senha.Any(char.IsLetter))
             throw new DomainException("A senha deve conter pelo menos uma letra.");
 
-        if (!usuario.Senha.Any(char.IsDigit))
+        if (!senha.Any(char.IsDigit))
             throw new DomainException("A senha deve conter pelo menos um número.");
+
+        if (!senha.Any(c => CaracteresEspeciais.Contains(c)))
+            throw new DomainException("A senha deve conter pelo menos um caractere especial.");
     }
 }
