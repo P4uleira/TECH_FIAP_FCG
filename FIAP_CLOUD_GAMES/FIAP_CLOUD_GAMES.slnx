@@ -3,4 +3,5 @@
   <Project Path="FCG.Application/FCG.Application.csproj" Id="4483279b-c298-4e85-a8c4-f134287bd61c" />
   <Project Path="FCG.Domain/FCG.Domain.csproj" />
   <Project Path="FCG.Infra/FCG.Infra.csproj" />
+  <Project Path="FCG.Tests/FCG.Tests.csproj" Id="41d7f24c-546c-4e3c-9314-d8ddeb0f21d4" />
 </Solution>

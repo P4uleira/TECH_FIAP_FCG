@@ -6,4 +6,5 @@ public interface IUsuarioService
 {
     Task ValidaEmail(Usuario usuario);
     Task ValidaSenhaForte(Usuario usuario);
+    Task ValidarCriacao(Usuario usuario);
 }
