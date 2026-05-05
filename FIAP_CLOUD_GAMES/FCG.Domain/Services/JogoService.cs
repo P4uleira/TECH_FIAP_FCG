@@ -39,7 +39,7 @@ public class JogoService : IJogoService
         if (precoPromocional >= jogo.Preco)
             throw new DomainException("O preço promocional deve ser menor que o preço original.");
 
-        if (expiracao.HasValue && expiracao.Value <= DateTime.UtcNow)
+        if (expiracao.HasValue && expiracao.Value <= DateTime.Now)
             throw new DomainException("A data de expiração da promoção deve ser futura.");
     }
 
@@ -57,7 +57,7 @@ public class JogoService : IJogoService
         if (jogo.Preco < 0)
             throw new DomainException("O preço do jogo não pode ser negativo.");
 
-        if (jogo.DataCriacao > DateTime.UtcNow)
+        if (jogo.DataCriacao > DateTime.Now)
             throw new DomainException("A data de criação do jogo não pode ser futura.");
     }
 }

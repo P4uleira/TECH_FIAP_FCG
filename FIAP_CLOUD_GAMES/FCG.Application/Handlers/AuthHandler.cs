@@ -43,7 +43,7 @@ namespace FCG.Application.Handlers
                 Nome = usuario.Nome,
                 Email = usuario.Email,
                 Acesso = usuario.Acesso.AcessoNome,
-                Expiracao = DateTime.UtcNow.AddHours(8)
+                Expiracao = DateTime.Now.AddHours(8)
             };
         }
     }

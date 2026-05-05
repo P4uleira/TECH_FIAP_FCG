@@ -32,7 +32,7 @@ public class AuthService : IAuthService
             new Claim(ClaimTypes.Role, usuario.Acesso.AcessoNome)
         };
 
-        var expiracao = DateTime.UtcNow.AddHours(
+        var expiracao = DateTime.Now.AddHours(
             double.Parse(_configuration["Jwt:ExpiracaoHoras"] ?? "8"));
 
         var token = new JwtSecurityToken(

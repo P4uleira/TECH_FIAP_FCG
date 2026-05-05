@@ -23,7 +23,7 @@ public class JogoServiceTddTests
         Titulo = "The Witcher 3",
         Descricao = "RPG de mundo aberto",
         Preco = 99.90m,
-        DataCriacao = DateTime.UtcNow.AddDays(-1)
+        DataCriacao = DateTime.Now.AddDays(-1)
     };
 
     // ════════════════════════════════════════════════════════════════════════
@@ -113,7 +113,7 @@ public class JogoServiceTddTests
     // ════════════════════════════════════════════════════════════════════════
     // CICLO 4 — ValidarCampos: DataCriacao
     // RED: teste escrito, validação de data não existe → falha
-    // GREEN: adiciona validação DataCriacao > DateTime.UtcNow
+    // GREEN: adiciona validação DataCriacao > DateTime.Now
     // REFACTOR: sem mudança necessária
     // ════════════════════════════════════════════════════════════════════════
 
@@ -121,7 +121,7 @@ public class JogoServiceTddTests
     public async Task ValidarCriacao_DataCriacaoFutura_LancaDomainException()
     {
         var jogo = JogoValido();
-        jogo.DataCriacao = DateTime.UtcNow.AddDays(1);
+        jogo.DataCriacao = DateTime.Now.AddDays(1);
 
         var act = async () => await _service.ValidarCriacao(jogo);
 
@@ -235,7 +235,7 @@ public class JogoServiceTddTests
     {
         var jogo = JogoValido();
 
-        var act = () => _service.ValidarPromocao(jogo, precoPromocional: 49.90m, expiracao: DateTime.UtcNow.AddDays(-1));
+        var act = () => _service.ValidarPromocao(jogo, precoPromocional: 49.90m, expiracao: DateTime.Now.AddDays(-1));
 
         act.Should().Throw<DomainException>()
             .WithMessage("A data de expiração da promoção deve ser futura.");
@@ -256,7 +256,7 @@ public class JogoServiceTddTests
     {
         var jogo = JogoValido();
 
-        var act = () => _service.ValidarPromocao(jogo, precoPromocional: 49.90m, expiracao: DateTime.UtcNow.AddDays(7));
+        var act = () => _service.ValidarPromocao(jogo, precoPromocional: 49.90m, expiracao: DateTime.Now.AddDays(7));
 
         act.Should().NotThrow();
     }
@@ -277,7 +277,7 @@ public class JogoServiceTddTests
             Titulo = titulo,
             Descricao = descricao,
             Preco = preco,
-            DataCriacao = DateTime.UtcNow.AddDays(-1)
+            DataCriacao = DateTime.Now.AddDays(-1)
         };
 
         var act = async () => await _service.ValidarCriacao(jogo);
