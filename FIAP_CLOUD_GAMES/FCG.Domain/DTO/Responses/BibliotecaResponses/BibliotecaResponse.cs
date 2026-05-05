@@ -6,5 +6,5 @@ public class BibliotecaResponse
     public string Titulo { get; set; } = string.Empty;
     public string Descricao { get; set; } = string.Empty;
     public decimal Preco { get; set; }
-    public DateTime DataAquisicao { get; set; }
+    public DateTime DataAquisicao { get; set; } = DateTime.Now;
 }

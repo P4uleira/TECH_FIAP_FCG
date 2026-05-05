@@ -47,6 +47,7 @@ public class UsuarioController : ControllerBase
     }
 
     [HttpPut]
+    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Atualizar([FromBody] AtualizarUsuarioRequest request)
     {
         await _handler.Atualizar(request);
@@ -54,6 +55,7 @@ public class UsuarioController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Deletar(Guid id)
     {
         await _handler.Deletar(id);
