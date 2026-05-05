@@ -52,7 +52,7 @@ public class BibliotecaHandler : IBibliotecaHandler
         {
             UsuarioId = usuarioId,
             JogoId = jogoId,
-            DataCompra = DateTime.UtcNow
+            DataCompra = DateTime.Now
         };
 
         await _bibliotecaRepository.Adicionar(biblioteca);

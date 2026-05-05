@@ -34,7 +34,6 @@ public class BibliotecaController : ControllerBase
     }
 
     [HttpDelete("{jogoId:guid}")]
-    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> RemoverJogo(Guid jogoId)
     {
         var usuarioId = ObterUsuarioId();

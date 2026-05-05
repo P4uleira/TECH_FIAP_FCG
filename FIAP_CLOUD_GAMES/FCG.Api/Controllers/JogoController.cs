@@ -60,7 +60,6 @@ public class JogoController : ControllerBase
     }
 
     [HttpPut("{id:guid}/promocao")]
-    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> AplicarPromocao(Guid id, [FromBody] PromocaoRequest request)
     {
         await _handler.AplicarPromocao(id, request);
@@ -69,7 +68,6 @@ public class JogoController : ControllerBase
 
 
     [HttpDelete("{id:guid}/promocao")]
-    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> RemoverPromocao(Guid id)
     {
         await _handler.RemoverPromocao(id);

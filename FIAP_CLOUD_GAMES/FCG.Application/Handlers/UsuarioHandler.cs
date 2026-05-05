@@ -39,8 +39,6 @@ public class UsuarioHandler : IUsuarioHandler
             throw new KeyNotFoundException($"Usuário com ID {request.Id} não encontrado.");
 
 
-        await _usuarioService.ValidarCriacao(usuarioExistente);
-
         if (!string.IsNullOrWhiteSpace(request.Nome))
             usuarioExistente.Nome = request.Nome;
 
@@ -53,12 +51,15 @@ public class UsuarioHandler : IUsuarioHandler
         if (!string.IsNullOrWhiteSpace(request.Senha))
         {
             usuarioExistente.Senha = request.Senha;
-            await _usuarioService.ValidaSenhaForte(usuarioExistente);
             usuarioExistente.Senha = _authService.HashSenha(request.Senha);
         }
 
         if (request.AcessoId.HasValue)
             usuarioExistente.AcessoId = request.AcessoId.Value;
+
+        await _usuarioService.ValidarCriacao(usuarioExistente);
+
+        
 
         await _usuarioRepository.Atualizar(usuarioExistente);
 

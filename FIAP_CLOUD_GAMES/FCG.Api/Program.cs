@@ -119,6 +119,9 @@ builder.Services.AddAuthorization();
     builder.Services.AddScoped<IAuthHandler, AuthHandler>();
     builder.Services.AddScoped<IAuthService, AuthService>();
 
+    builder.Services.AddScoped<IBibliotecaHandler, BibliotecaHandler>();
+    builder.Services.AddScoped<IBibliotecaRepository, BibliotecaRepository>();
+
     builder.Services.AddScoped<IJogoService, JogoService>();
     builder.Services.AddScoped<IJogoHandler, JogoHandler>();
     builder.Services.AddScoped<IJogoRepository, JogoRepository>();
