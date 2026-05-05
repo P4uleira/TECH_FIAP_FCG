@@ -38,7 +38,6 @@ public class UsuarioHandler : IUsuarioHandler
         if (usuarioExistente is null)
             throw new KeyNotFoundException($"Usuário com ID {request.Id} não encontrado.");
 
-
         if (!string.IsNullOrWhiteSpace(request.Nome))
             usuarioExistente.Nome = request.Nome;
 
@@ -58,8 +57,6 @@ public class UsuarioHandler : IUsuarioHandler
             usuarioExistente.AcessoId = request.AcessoId.Value;
 
         await _usuarioService.ValidarCriacao(usuarioExistente);
-
-        
 
         await _usuarioRepository.Atualizar(usuarioExistente);
 

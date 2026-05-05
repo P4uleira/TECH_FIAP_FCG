@@ -12,13 +12,11 @@ public class UsuarioService : IUsuarioService
 
     public async Task ValidaEmail(Usuario usuario)
     {
-        ValidarNome(usuario.Nome);
         ValidarEmail(usuario.Email);
     }
 
     public async Task ValidaSenhaForte(Usuario usuario)
     {
-        ValidarNome(usuario.Nome);
         ValidarSenha(usuario.Senha);
     }
 

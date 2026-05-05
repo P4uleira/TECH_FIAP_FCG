@@ -8,7 +8,7 @@ namespace FCG.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "Administrador")]
+[Authorize]
 public class UsuarioController : ControllerBase
 {
     private readonly IUsuarioHandler _handler;
@@ -19,6 +19,7 @@ public class UsuarioController : ControllerBase
     }
     
     [HttpGet("{id:guid}")]
+    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> BuscarPorId(Guid id)
     {
         var response = await _handler.BuscarPorId(id);
@@ -30,6 +31,7 @@ public class UsuarioController : ControllerBase
     }
     
     [HttpGet]
+    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> BuscarTodos()
     {
         var response = await _handler.BuscarTodos();
@@ -45,7 +47,6 @@ public class UsuarioController : ControllerBase
     }
 
     [HttpPut]
-    [Authorize(Roles = "Administrador, Usuario")]
     public async Task<IActionResult> Atualizar([FromBody] AtualizarUsuarioRequest request)
     {
         await _handler.Atualizar(request);
@@ -53,7 +54,6 @@ public class UsuarioController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = "Administrador, Usuario")]
     public async Task<IActionResult> Deletar(Guid id)
     {
         await _handler.Deletar(id);
