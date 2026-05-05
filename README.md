@@ -213,7 +213,7 @@ Edite o arquivo `FCG.Api/appsettings.json`:
 ### 3. Execute as migrations
 
 ```bash
-dotnet ef database update --project FCG.Infra --startup-project FCG.Api
+Update-Database -StartupProject FCG.Api -Project FCG.Infra   --> Package Manager Console
 ```
 
 Isso criará o banco de dados com as tabelas e os dados iniciais de `Acesso` (Usuário e Administrador).
